@@ -1,1 +1,143 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The Library</title><meta name="description" content="Neil's reading log, to-read list, ratings and reviews."><meta name="theme-color" content="#1f4d3a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Library"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/png" href="./favicon-64.png"><link rel="apple-touch-icon" href="./apple-touch-icon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="./s1.css"><link rel="stylesheet" href="./s2.css"></head><body><div class="wrap" id="authview" hidden><div class="auth"><div><div class="eyebrow">Your reading life</div><h1>The Library</h1></div><form id="authform" novalidate><label>Email<input type="email" id="au-email" autocomplete="email" required></label> <label>Password<input type="password" id="au-pass" autocomplete="current-password" minlength="8" required></label> <button class="btn solid" type="submit" id="au-go">Sign in</button><p class="authmsg" id="au-msg" role="status"></p><button class="linkbtn" type="button" id="au-mode">New here? Create an account</button> <button class="linkbtn" type="button" id="au-forgot">Forgot your password?</button></form><form id="resetform" hidden novalidate><label>New password<input type="password" id="rs-pass" autocomplete="new-password" minlength="8" required></label> <button class="btn solid" type="submit">Set new password</button><p class="authmsg" id="rs-msg" role="status"></p></form></div></div><div class="wrap" id="appview" hidden><header><div class="topbar"><div class="eyebrow">Neil's reading life</div><div class="acct"><span class="sync" id="sync">Synced</span><span id="who"></span><button class="linkbtn" type="button" id="signout">Sign out</button></div></div><h1>The Library</h1><div class="meta" id="meta"></div></header><div class="install" id="install" hidden><span id="install-text">Install The Library on this device to open it like an app, even offline.</span> <button class="btn solid" type="button" id="install-btn">Install</button> <button class="linkbtn" type="button" id="install-close">Not now</button></div><section class="stats" id="stats" aria-label="Shelf summary"></section><section class="next" id="picks" aria-label="What to read next" hidden></section><section style="display:grid;gap:14px" aria-label="Shelves"><div class="shelf-head"><div class="tabs" role="tablist"><button class="tab" role="tab" id="tab-read" aria-selected="true">Read <small id="n-read"></small></button> <button class="tab" role="tab" id="tab-tbr" aria-selected="false">To read <small id="n-tbr"></small></button></div><div class="tools"><input type="search" id="q" placeholder="Search title, author, series" aria-label="Search books"> <select id="sort" aria-label="Sort"><option value="default">Shelf order</option><option value="gr">Goodreads rating</option><option value="mine">Your rating</option><option value="title">Title</option><option value="author">Author</option></select></div></div><div class="chips" id="chips"></div><div class="legend" id="legend"></div><div class="list" id="list"><div class="loading">Loading your shelves…</div></div></section><details class="add gr-panel"><summary>Send reviews to Goodreads</summary><div style="padding:0 16px 16px;display:grid;gap:12px"><p class="ehint" style="font-size:13.5px;max-width:70ch">Goodreads doesn't let other apps post reviews for you, so there are two ways to get yours there.</p><ol><li><b>One at a time.</b> Open a book's review and choose <i>Copy review</i>, then <i>Open on Goodreads</i> and paste it into the review box there. Come back and choose <i>Mark as posted</i>.</li><li><b>All at once.</b> Export an import file below and upload it at <a href="https://www.goodreads.com/review/import" target="_blank" rel="noopener">goodreads.com/review/import</a>. The file has no ISBNs, so Goodreads has to match by title and author: a book can land on a different edition, be skipped, or show up twice. Try it with one or two books first, and check the review text came through.</li></ol><div class="erow"><label>Include <select id="x-scope"><option value="unposted">Reviews not yet posted</option><option value="reviews">All books with a review</option><option value="all">Both shelves</option></select></label> <button class="btn solid" type="button" id="x-go">Export for Goodreads</button> <span class="estatus" id="x-msg"></span></div></div></details><details class="add"><summary>Add a book</summary><form class="addform" id="addform"><label>Title<input type="text" id="a-title" required></label> <label>Author<input type="text" id="a-author"></label> <label>Series<input type="text" id="a-series" placeholder="e.g. Hierarchy #3"></label> <label>Shelf<select id="a-list"><option value="tbr">To read</option><option value="read">Read</option></select></label> <label>Why it's on the list<input type="text" id="a-why" placeholder="Who recommended it, or why"></label> <label>Genre<select id="a-genre"><option value="fantasy">Fantasy</option><option value="romantasy">Romantasy</option><option value="scifi">Sci-fi</option><option value="litrpg">LitRPG</option><option value="fiction">Other fiction</option><option value="nonfiction">Non-fiction</option></select></label><div style="display:flex;align-items:end"><button class="btn solid" type="submit">Add to shelf</button></div></form><p class="src" style="padding:0 16px 14px;margin:0">New books start without a Goodreads rating. Ask Claude to "update the Library" and it will fill them in.</p></details><footer class="foot"><span>Goodreads averages pulled 3 Nov 2026. Sources: Audible library, Kindle orders, and your Drive "Books" folder.</span> <span id="save"></span></footer></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="./app1.js"></script><script src="./app2.js"></script><script src="./app3.js"></script><script src="./app4.js"></script><script src="./app5.js"></script><script src="./app6.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Library</title>
+<meta name="description" content="Neil's reading log, to-read list, ratings and reviews.">
+<meta name="theme-color" content="#1f4d3a" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15382a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Library">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./favicon-64.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./s1.css">
+<link rel="stylesheet" href="./s2.css">
+</head>
+<body>
+
+<div class="authwrap" id="authview" hidden>
+  <header class="band authband"><div class="band-in">
+    <div class="topbar"><div class="eyebrow">Your reading life</div></div>
+    <h1>The Library</h1>
+    <div class="spines" id="auth-spines" aria-hidden="true"></div>
+  </div></header>
+  <div class="auth">
+    <form id="authform" novalidate>
+      <label>Email<input type="email" id="au-email" autocomplete="email" required></label>
+      <label>Password<input type="password" id="au-pass" autocomplete="current-password" minlength="8" required></label>
+      <button class="btn solid" type="submit" id="au-go">Sign in</button>
+      <p class="authmsg" id="au-msg" role="status"></p>
+      <button class="linkbtn" type="button" id="au-mode">New here? Create an account</button>
+      <button class="linkbtn" type="button" id="au-forgot">Forgot your password?</button>
+    </form>
+    <form id="resetform" hidden novalidate>
+      <label>New password<input type="password" id="rs-pass" autocomplete="new-password" minlength="8" required></label>
+      <button class="btn solid" type="submit">Set new password</button>
+      <p class="authmsg" id="rs-msg" role="status"></p>
+    </form>
+  </div>
+</div>
+
+<div id="appview" hidden>
+  <header class="band"><div class="band-in">
+    <div class="topbar">
+      <div class="eyebrow">Neil's reading life</div>
+      <div class="acct">
+        <span class="sync" id="sync">Synced</span>
+        <button class="iconbtn" type="button" id="search-btn" aria-label="Search books"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+      </div>
+    </div>
+    <h1>The Library</h1>
+    <div class="meta" id="meta"></div>
+    <div class="spines" id="spines" aria-hidden="true"></div>
+  </div></header>
+
+  <main class="wrap">
+    <div class="install" id="install" hidden>
+      <span id="install-text">Install The Library on this device to open it like an app, even offline.</span>
+      <button class="btn solid small" type="button" id="install-btn">Install</button>
+      <button class="linkbtn" type="button" id="install-close">Not now</button>
+    </div>
+
+    <section class="next" id="picks" aria-label="What to read next" hidden></section>
+
+    <section class="shelves" id="shelves" aria-label="Shelves">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-read" aria-selected="true">Read <small id="n-read"></small></button>
+        <button class="tab" role="tab" id="tab-tbr" aria-selected="false">To read <small id="n-tbr"></small></button>
+      </div>
+      <div class="tools">
+        <input type="search" id="q" placeholder="Search books" aria-label="Search books">
+        <select id="sort" aria-label="Sort">
+          <option value="default">Shelf order</option>
+          <option value="gr">Goodreads rating</option>
+          <option value="mine">Your rating</option>
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="legend" id="legend"></div>
+      <div class="list" id="list"><div class="loading">Loading your shelves…</div></div>
+    </section>
+
+    <details class="add gr-panel" id="reviews">
+      <summary>Send reviews to Goodreads</summary>
+      <div style="padding:0 16px 16px;display:grid;gap:12px">
+        <p class="ehint" style="font-size:13.5px;max-width:70ch">Goodreads doesn't let other apps post reviews for you, so there are two ways to get yours there.</p>
+        <ol>
+          <li><b>One at a time.</b> Open a book's review and choose <i>Copy review</i>, then <i>Open on Goodreads</i> and paste it into the review box there. Come back and choose <i>Mark as posted</i>.</li>
+          <li><b>All at once.</b> Export an import file below and upload it at <a href="https://www.goodreads.com/review/import" target="_blank" rel="noopener">goodreads.com/review/import</a>. The file has no ISBNs, so Goodreads has to match by title and author: a book can land on a different edition, be skipped, or show up twice. Try it with one or two books first, and check the review text came through.</li>
+        </ol>
+        <div class="erow">
+          <label>Include <select id="x-scope"><option value="unposted">Reviews not yet posted</option><option value="reviews">All books with a review</option><option value="all">Both shelves</option></select></label>
+          <button class="btn solid" type="button" id="x-go">Export for Goodreads</button>
+          <span class="estatus" id="x-msg"></span>
+        </div>
+      </div>
+    </details>
+
+    <details class="add" id="addbox">
+      <summary>Add a book</summary>
+      <form class="addform" id="addform">
+        <label>Title<input type="text" id="a-title" required></label>
+        <label>Author<input type="text" id="a-author"></label>
+        <label>Series<input type="text" id="a-series" placeholder="e.g. Hierarchy #3"></label>
+        <label>Shelf<select id="a-list"><option value="tbr">To read</option><option value="read">Read</option></select></label>
+        <label>Why it's on the list<input type="text" id="a-why" placeholder="Who recommended it, or why"></label>
+        <label>Genre<select id="a-genre"><option value="fantasy">Fantasy</option><option value="romantasy">Romantasy</option><option value="scifi">Sci-fi</option><option value="litrpg">LitRPG</option><option value="fiction">Other fiction</option><option value="nonfiction">Non-fiction</option></select></label>
+        <div style="display:flex;align-items:end"><button class="btn solid" type="submit">Add to shelf</button></div>
+      </form>
+      <p class="src" style="padding:0 16px 14px;margin:0">New books start without a Goodreads rating. Ask Claude to "update the Library" and it will fill them in.</p>
+    </details>
+
+    <footer class="foot">
+      <span>Goodreads averages pulled 3 Nov 2026. Sources: Audible library, Kindle orders, and your Drive "Books" folder.</span>
+      <span class="who"><span id="who"></span><button class="linkbtn" type="button" id="signout">Sign out</button><span id="save"></span></span>
+    </footer>
+  </main>
+
+  <nav class="tabbar" aria-label="Main"><div class="tabbar-in">
+    <button type="button" data-go="shelves" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3.5-1 2.5 15.5-3.5 1z"/></svg>Shelves</button>
+    <button type="button" data-go="picks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Next</button>
+    <button type="button" data-go="reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>Reviews</button>
+    <button type="button" data-go="addbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add</button>
+  </div></nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="./app1.js"></script>
+<script src="./app2.js"></script>
+<script src="./app3.js"></script>
+<script src="./app4.js"></script>
+<script src="./app5.js"></script>
+<script src="./app6.js"></script>
+</body>
+</html>

@@ -31,6 +31,7 @@ function wireEditor() {
 
 $('list').addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return; const b = find(t.dataset.id); if (!b) return;
+  if (t.dataset.act === 'expand') { expId = expId === b.id ? null : b.id; if (expId !== b.id && openId === b.id) openId = null; list(); return; }
   if (t.dataset.act === 'review') { openId = openId === b.id ? null : b.id; list(); const ta = $('ed-text'); if (ta) ta.focus(); return; }
   if (t.dataset.r) { const r = +t.dataset.r; b.rating = b.rating === r ? 0 : r; change(b); }
   else if (t.dataset.act === 'yes') { b.confirm = false; if (b.status !== 'paused' && b.status !== 'reading') b.status = 'finished'; change(b); }
@@ -56,3 +57,30 @@ $('addform').addEventListener('submit', e => {
     owned: '', note: '', rating: 0, gr: 0, grn: 0, year: '', url: '', added: today(), confirm: false, order: minOrder - 1 };
   books.push(b); e.target.reset(); view = lst; filter = 'all'; change(b);
 });
+
+// ---------- read-next card, bottom bar, search ----------
+$('picks').addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.act === 'morepicks') { picksOpen = !picksOpen; renderPicks(); return; }
+  if (t.dataset.act === 'startpick') {
+    const b = find(t.dataset.id); if (!b) return;
+    b.list = 'read'; b.status = 'reading'; b.confirm = false; b.source = (b.source || '') + ' · started ' + today();
+    view = 'read'; filter = 'all'; expId = b.id; change(b);
+  }
+});
+const goTo = id => {
+  const el = $(id); if (!el || el.hidden) return;
+  if (el.tagName === 'DETAILS') el.open = true;
+  el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  if (id === 'addbox') setTimeout(() => $('a-title').focus({ preventScroll: true }), 350);
+};
+document.querySelectorAll('.tabbar button').forEach(btn => btn.onclick = () => {
+  document.querySelectorAll('.tabbar button').forEach(x => x.removeAttribute('aria-current'));
+  btn.setAttribute('aria-current', 'page');
+  goTo(btn.dataset.go);
+});
+$('search-btn').onclick = () => { goTo('shelves'); setTimeout(() => $('q').focus({ preventScroll: true }), 350); };
+(() => {
+  const demo = ['scifi', 'scifi', 'fantasy', 'romantasy', 'litrpg', 'litrpg', 'litrpg', 'fantasy', 'romantasy', 'scifi', 'fantasy', 'fantasy', 'romantasy', 'romantasy', 'nonfiction', 'fantasy', 'scifi', 'litrpg', 'romantasy', 'fantasy', 'fiction', 'scifi', 'fantasy', 'romantasy', 'litrpg', 'fantasy', 'scifi', 'romantasy', 'fantasy', 'fantasy', 'scifi', 'litrpg', 'fantasy', 'romantasy', 'scifi', 'fantasy', 'nonfiction', 'romantasy', 'fantasy', 'litrpg', 'scifi', 'fantasy'];
+  $('auth-spines').innerHTML = spinesHTML(demo.map((g, i) => ({ id: 'd' + i, genre: g })));
+})();

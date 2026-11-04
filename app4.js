@@ -1,23 +1,43 @@
+const PRI = { next: 'Next', soon: 'Soon', someday: 'Someday' };
 function row(b) {
-  const pct = b.gr ? Math.round(b.gr / 5 * 100) : 0;
-  const gr = b.gr ? `<div class="gr"><b>${(+b.gr).toFixed(2)}</b><div class="bar"><i style="width:${pct}%"></i></div><small>${fmtN(b.grn)} ratings${b.year ? ' · ' + esc(b.year) : ''}</small></div>` : `<div class="gr"><small>No Goodreads rating yet</small></div>`;
-  const title = b.url ? `<a class="title" href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.title)}</a>` : `<span class="title">${esc(b.title)}</span>`;
+  const open = expId === b.id, r = +b.rating || 0;
   const by = [b.author, b.series].filter(Boolean).map(esc).join(' · ');
-  let mine;
+  const tags = [];
   if (b.list === 'read') {
-    const r = +b.rating || 0;
+    if (b.confirm) tags.push('<span class="tag-s warn">Check this one</span>');
+    if (b.status === 'reading') tags.push('<span class="tag-s">Reading</span>');
+    if (b.status === 'paused') tags.push('<span class="tag-s warn">Paused</span>');
+    if (b.status === 'abandoned') tags.push('<span class="tag-s warn">Abandoned</span>');
+    if (b.review && b.review.text) tags.push(b.review.posted ? '<span class="tag-s">Review posted</span>' : '<span class="tag-s">Review drafted</span>');
+  } else if (/^yes/.test(b.owned || '')) tags.push('<span class="tag-s">Owned</span>');
+  const grS = b.gr ? `GR ${(+b.gr).toFixed(2)}` : 'No GR yet';
+  const nums = b.list === 'read'
+    ? (r ? `<b>${r % 1 ? r.toFixed(1) : r}</b>` : '<span class="rate-it">Rate it</span>') + `<small>${grS}</small>`
+    : (b.gr ? `<b>${(+b.gr).toFixed(2)}</b>` : '') + `<span class="pri">${PRI[b.priority] || ''}</span>`;
+  const head = `<button class="rowhead" type="button" data-id="${b.id}" data-act="expand" aria-expanded="${open}">
+    <span class="spine" title="${GENRES[b.genre] || ''}"></span>
+    <span class="info"><span class="title">${esc(b.title)}</span><span class="by">${by}</span>${tags.length ? `<span class="tagline">${tags.join('')}</span>` : ''}</span>
+    <span class="nums">${nums}</span></button>`;
+  if (!open) return `<div class="row g-${b.genre}">${head}</div>`;
+  const grLine = b.gr ? `<div class="gr-line">Goodreads ${(+b.gr).toFixed(2)} from ${fmtN(b.grn)} ratings${b.year ? ' · ' + esc(b.year) : ''}</div>` : '<div class="gr-line">No Goodreads rating yet</div>';
+  const gl = b.url ? `<a class="btn small quiet" href="${esc(b.url)}" target="_blank" rel="noopener">Open on Goodreads</a>` : '';
+  let body;
+  if (b.list === 'read') {
     const stars = [1, 2, 3, 4, 5].map(n => `<button class="star ${r >= n ? 'on' : (r >= n - 0.5 ? 'half' : '')}" type="button" data-id="${b.id}" data-r="${n}" aria-label="Rate ${n} of 5">★</button>`).join('');
     const num = `<input class="myr" type="number" inputmode="decimal" min="0" max="5" step="0.1" data-id="${b.id}" data-k="rating" value="${r ? r : ''}" placeholder="–" aria-label="Your rating for ${esc(b.title)}, 0 to 5">`;
     const sel = `<select data-id="${b.id}" data-k="status" aria-label="Status for ${esc(b.title)}">${Object.entries(STATUS).map(([k, l]) => `<option value="${k}" ${b.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
-    mine = `<div class="mine"><div class="rate"><div class="stars" role="group" aria-label="Your rating">${stars}</div>${num}</div>${sel}</div>`;
+    body = (b.note ? `<div class="note">“${esc(b.note)}”</div>` : '') +
+      (b.confirm ? `<div class="flag">Check this one: ${esc(b.source)} <button class="btn small" type="button" data-id="${b.id}" data-act="yes">Yes, read it</button></div>` : '') +
+      `<div class="ctrls"><div class="stars" role="group" aria-label="Your rating">${stars}</div>${num}${sel}</div>` +
+      grLine + (b.confirm ? '' : `<div class="src">${esc(b.source)}${b.format ? ' · ' + esc(b.format) : ''}</div>`) +
+      `<div class="revline"><button class="btn small" type="button" data-id="${b.id}" data-act="review" aria-expanded="${openId === b.id}">${openId === b.id ? 'Close review' : (b.review && b.review.text ? 'Edit review' : 'Write review')}</button>${gl}</div>`;
   } else {
-    const sel = `<select data-id="${b.id}" data-k="priority" aria-label="Priority for ${esc(b.title)}">${['next', 'soon', 'someday'].map(k => `<option value="${k}" ${b.priority === k ? 'selected' : ''}>${k[0].toUpperCase() + k.slice(1)}</option>`).join('')}</select>`;
-    mine = `<div class="mine">${sel}<button class="btn" type="button" data-id="${b.id}" data-act="start">Start reading</button></div>`;
+    const sel = `<select data-id="${b.id}" data-k="priority" aria-label="Priority for ${esc(b.title)}">${['next', 'soon', 'someday'].map(k => `<option value="${k}" ${b.priority === k ? 'selected' : ''}>${PRI[k]}</option>`).join('')}</select>`;
+    body = `<div class="src">${esc(b.why)}${b.owned && /^yes/.test(b.owned) ? ' · <b>owned</b> ' + esc(b.owned.replace(/^yes\s*/, '')) : ''}</div>` +
+      (b.note ? `<div class="note">${esc(b.note)}</div>` : '') + grLine +
+      `<div class="ctrls">${sel}<button class="btn small solid" type="button" data-id="${b.id}" data-act="start">Start reading</button>${gl}</div>`;
   }
-  const extra = b.list === 'read'
-    ? (b.note ? `<div class="note">“${esc(b.note)}”</div>` : '') + (b.confirm ? `<div class="flag">Check this one: ${esc(b.source)} <button class="btn" type="button" data-id="${b.id}" data-act="yes">Yes, read it</button></div>` : `<div class="src">${esc(b.source)}${b.format ? ' · ' + esc(b.format) : ''}</div>`) + revline(b)
-    : `<div class="src">${esc(b.why)}${b.owned && /^yes/.test(b.owned) ? ' · <b>owned</b> ' + esc(b.owned.replace(/^yes\s*/, '')) : ''}${b.note ? ' · ' + esc(b.note) : ''}</div>`;
-  return `<div class="row g-${b.genre}"><div class="spine" title="${GENRES[b.genre] || ''}"></div><div class="info">${title}<div class="by">${by}</div>${extra}</div>${gr}${mine}</div>`;
+  return `<div class="row g-${b.genre}" data-open="true">${head}<div class="rowbody">${body}</div></div>`;
 }
 function editor(b) {
   const r = b.review || {}, d = drafts[b.id], text = d != null ? d : (r.text || '');
