@@ -15,12 +15,12 @@ function row(b) {
     ? (r ? `<b>${r % 1 ? r.toFixed(1) : r}</b>` : '<span class="rate-it">Rate it</span>') + `<small>${grS}</small>`
     : (b.gr ? `<b>${(+b.gr).toFixed(2)}</b>` : '') + `<span class="pri">${PRI[b.priority] || ''}</span>`;
   const head = `<button class="rowhead" type="button" data-id="${b.id}" data-act="expand" aria-expanded="${open}">
-    <span class="spine" title="${GENRES[b.genre] || ''}"></span>
+    ${coverHTML(b)}
     <span class="info"><span class="title">${esc(b.title)}</span><span class="by">${by}</span>${tags.length ? `<span class="tagline">${tags.join('')}</span>` : ''}</span>
     <span class="nums">${nums}</span></button>`;
   if (!open) return `<div class="row g-${b.genre}">${head}</div>`;
   const grLine = b.gr ? `<div class="gr-line">Goodreads ${(+b.gr).toFixed(2)} from ${fmtN(b.grn)} ratings${b.year ? ' · ' + esc(b.year) : ''}</div>` : '<div class="gr-line">No Goodreads rating yet</div>';
-  const gl = b.url ? `<a class="btn small quiet" href="${esc(b.url)}" target="_blank" rel="noopener">Open on Goodreads</a>` : '';
+  const gl = (b.url ? `<a class="btn small quiet" href="${esc(b.url)}" target="_blank" rel="noopener">Open on Goodreads</a>` : '') + coverBtn(b);
   let body;
   if (b.list === 'read') {
     const stars = [1, 2, 3, 4, 5].map(n => `<button class="star ${r >= n ? 'on' : (r >= n - 0.5 ? 'half' : '')}" type="button" data-id="${b.id}" data-r="${n}" aria-label="Rate ${n} of 5">★</button>`).join('');

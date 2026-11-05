@@ -39,6 +39,7 @@ $('scan-input').addEventListener('change', async e => {
     scanMsg(`Preparing ${files.length} image${files.length > 1 ? 's' : ''}…`);
     const images = [];
     for (const f of files) images.push(await prepImage(f));
+    window.__lastImages = images;
     scanMsg('Reading the books in your image' + (files.length > 1 ? 's' : '') + '… this takes 10 to 30 seconds.');
     const res = await aiCall({ action: 'scan', images });
     scanSource = res.source || 'other';
@@ -108,6 +109,8 @@ function addScanned() {
   render();
   scanMsg(`Added ${added.length} book${added.length > 1 ? 's' : ''}. Looking up their Goodreads ratings…`);
   lookupRatings(added);
+  if (scanSource === 'cover' && added.length === 1 && (window.__lastImages || []).length === 1)
+    makeThumb('data:image/jpeg;base64,' + window.__lastImages[0].data).then(c => { added[0].cover = c; added[0].coverOwn = true; change(added[0]); }).catch(() => {});
 }
 
 // ---------- Goodreads ratings lookup ----------
