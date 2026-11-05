@@ -41,12 +41,12 @@ function renderPicks() {
   else if (b && b.url) main = `<a class="btn solid" href="${esc(b.url)}" target="_blank" rel="noopener">Open on Goodreads</a>`;
   const hasMore = rows.length > 1 || (picks.alts || []).length || picks.note;
   el.innerHTML = `<div class="pick-head"><span class="eyebrow">Read next</span>${grTxt ? `<span class="mono">${grTxt}</span>` : ''}</div>
-    <div class="pick-body">${b && b.cover && b.cover !== 'none' ? `<img class="cover-img" src="${esc(b.cover)}" alt="" width="58" height="86">` : `<div class="cover g-${esc((b && b.genre) || 'fiction')}" aria-hidden="true">${coverLabel(b, L)}</div>`}
+    <div class="pick-body">${pickCoverHTML(b, L)}
       <div class="pick-text"><h2>${esc(L.title)}</h2><div class="by">${by}</div>${why ? `<p>${why}</p>` : ''}</div></div>
-    <div class="pick-btns">${main}${hasMore ? `<button class="btn quiet" type="button" data-act="morepicks" aria-expanded="${picksOpen}">${picksOpen ? 'Fewer details' : 'Other picks'}</button>` : ''}</div>
+    <div class="pick-btns">${main}${hasMore ? `<button class="btn quiet" type="button" data-act="morepicks" aria-expanded="${picksOpen}">${picksOpen ? 'Fewer details' : `<span class="pick-strip">${(picks.alts || []).slice(0, 3).map(altCoverHTML).join('')}</span>Other picks`}</button>` : ''}</div>
     ${hasMore && picksOpen ? `<div class="pick-more">
       ${rows.length > 1 ? `<dl class="kv">${rows.slice(1).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${md(v)}</dd>`).join('')}</dl>` : ''}
-      ${(picks.alts || []).length ? `<div class="alts">${picks.alts.map(a => `<div class="alt"><span class="tag">${esc(a.tag)}</span><h3>${esc(a.title)}</h3><p>${md(a.text)}</p></div>`).join('')}</div>` : ''}
+      ${(picks.alts || []).length ? `<div class="alts">${picks.alts.map(a => `<div class="alt">${altCoverHTML(a)}<span class="tag">${esc(a.tag)}</span><h3>${esc(a.title)}</h3><p>${md(a.text)}</p></div>`).join('')}</div>` : ''}
       ${picks.note ? `<div class="honest">${md(picks.note)}</div>` : ''}</div>` : ''}`;
   el.hidden = false;
 }

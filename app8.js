@@ -72,3 +72,34 @@ async function fetchCovers() {
 const _render8 = render;
 render = function () { _render8(); clearTimeout(coverTimer); coverTimer = setTimeout(fetchCovers, 800); };
 window.addEventListener('online', () => fetchCovers());
+
+// ---------- covers for the suggested reads ----------
+// suggestions not on a shelf get their cover looked up once and remembered on this device
+const pickCovers = (() => { try { return JSON.parse(localStorage.getItem('lib:pickcovers') || '{}'); } catch (e) { return {}; } })();
+const normPick = s => String(s || '').toLowerCase().replace(/^(the|a|an)\s+/, '').replace(/[^a-z0-9]+/g, ' ').trim();
+let pickLookup = false;
+function pickCoverURL(title, author) {
+  const b = books.find(x => normPick(x.title) === normPick(title));
+  if (hasCover(b)) return b.cover;
+  const c = pickCovers[normPick(title)];
+  if (c === undefined && !pickLookup && navigator.onLine) {
+    pickLookup = true;
+    olCover({ title, author: author || (b && b.author) || '' })
+      .then(u => { pickCovers[normPick(title)] = u; try { localStorage.setItem('lib:pickcovers', JSON.stringify(pickCovers)); } catch (e) {} renderPicks(); })
+      .catch(() => { pickCovers[normPick(title)] = 'none'; })
+      .finally(() => { pickLookup = false; });
+  }
+  return c && c !== 'none' ? c : '';
+}
+function pickCoverHTML(b, L) {
+  const url = pickCoverURL(L.title, b && b.author);
+  return url ? `<img class="cover-img" src="${esc(url)}" alt="" width="58" height="86">`
+    : `<div class="cover g-${esc((b && b.genre) || 'fiction')}" aria-hidden="true">${coverLabel(b, L)}</div>`;
+}
+function altCoverHTML(a) {
+  const author = (String(a.text || '').match(/^([^,·*]+),/) || [])[1] || '';
+  const b = books.find(x => normPick(x.title) === normPick(a.title));
+  const url = pickCoverURL(a.title, author.trim());
+  return `<span class="thumb g-${esc((b && b.genre) || 'fiction')}" aria-hidden="true"><span class="thumb-i">${initials({ title: a.title })}</span>` +
+    (url ? `<img src="${esc(url)}" alt="" loading="lazy" onerror="this.remove()">` : '') + '</span>';
+}

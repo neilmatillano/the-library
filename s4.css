@@ -7,3 +7,10 @@
 .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--surface)}
 .rowbody{padding-left:56px}
 .cover-img{width:58px;height:86px;flex:none;border-radius:3px;object-fit:cover;box-shadow:0 1px 3px rgba(24,34,29,.25);background:var(--surface)}
+.alt{grid-template-columns:44px minmax(0,1fr);column-gap:12px;align-items:start}
+.alt .thumb{grid-row:1/4}
+.pick-strip{display:flex;align-items:center;gap:0;margin-left:2px}
+.pick-strip .thumb{width:28px;height:42px;margin-left:-8px;border:2px solid var(--surface)}
+.pick-strip .thumb:first-child{margin-left:0}
+.alt>:not(.thumb){grid-column:2}
+.pick-strip{margin-right:10px}
