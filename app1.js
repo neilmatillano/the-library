@@ -42,15 +42,15 @@ $('authform').addEventListener('submit', async e => {
   e.preventDefault();
   const email = $('au-email').value.trim(), password = $('au-pass').value;
   if (!email || password.length < 8) { authMsg('Enter your email and a password of at least 8 characters.', true); return; }
-  $('au-go').disabled = true; authMsg(mode === 'signin' ? 'Signing in…' : 'Creating your account…');
+  $('au-go').disabled = true; authMsg(mode === 'signin' ? 'Logging in…' : 'Creating your account…');
   try {
     if (mode === 'signin') {
       const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) authMsg(/confirm/i.test(error.message) ? 'Confirm your email first: open the link we sent you, then sign in here.' : 'Sign-in failed: ' + error.message, true);
+      if (error) authMsg(/confirm/i.test(error.message) ? 'Confirm your email first: open the link we sent you, then log in here.' : 'Login failed: ' + error.message, true);
     } else {
       const { data, error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: new URL('./', location.href).href } });
       if (error) authMsg('Could not create the account: ' + error.message, true);
-      else if (!data.session) authMsg('Account created. Open the confirmation link we emailed you, then come back and sign in.');
+      else if (!data.session) authMsg('Account created. Open the confirmation link we emailed you, then come back and log in.');
     }
   } finally { $('au-go').disabled = false; }
 });

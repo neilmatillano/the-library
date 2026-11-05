@@ -118,3 +118,8 @@
 .bhead-t p{margin:0}
 .bhead-t .gr-line{font-size:13px;color:var(--muted)}
 .prow > span:not(.av) > span{display:block}
+.authtabs{margin-bottom:-4px}
+.authhead{display:grid;gap:4px;margin-bottom:2px}
+.authhead h2{font-size:26px;line-height:1.15}
+.authhead p{margin:0;font-size:14px;color:var(--muted)}
+#au-hint{margin-top:-6px}
