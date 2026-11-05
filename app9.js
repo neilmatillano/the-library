@@ -558,3 +558,12 @@ $('list').addEventListener('click', e => {
   if (t.dataset.act === 'private') { b.private = !b.private; change(b); toast(b.private ? 'Hidden from members. Its posts were removed.' : 'Members can see this book again.'); }
   else if (t.dataset.act === 'recommend-own') openRecommend(snapOf(b));
 });
+
+// if sign-in finished before this script loaded, the shelves already started: bring the community up now
+if (user && !$('appview').hidden && !me) {
+  (async () => {
+    me = await loadMe();
+    if (!me) { showJoin(); return; }
+    setupMember(); applyRoute(); refreshBadge();
+  })();
+}

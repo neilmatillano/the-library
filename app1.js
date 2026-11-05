@@ -68,7 +68,7 @@ sb.auth.onAuthStateChange((event, session) => {
   if (event === 'PASSWORD_RECOVERY') { showAuth(); $('authform').hidden = true; $('resetform').hidden = false; return; }
   const u = session && session.user;
   // defer: Supabase calls made inside this callback can deadlock the auth lock
-  if (u && (!user || user.id !== u.id)) { user = u; setTimeout(start, 0); }
+  if (u && (!user || user.id !== u.id)) { user = u; setTimeout(() => start(), 0); }
   else if (!u && user) { user = null; books = []; picks = null; loaded = false; showAuth(); }
   else if (!u && !user) showAuth();
 });
