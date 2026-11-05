@@ -17,8 +17,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="./s1.css?v=3">
-<link rel="stylesheet" href="./s2.css?v=3">
+<link rel="stylesheet" href="./s1.css?v=4">
+<link rel="stylesheet" href="./s2.css?v=4">
+<link rel="stylesheet" href="./s3.css?v=4">
 </head>
 <body>
 
@@ -105,7 +106,14 @@
     </details>
 
     <details class="add" id="addbox">
-      <summary>Add a book</summary>
+      <summary>Add books</summary>
+      <div class="scan">
+        <p class="ehint" style="font-size:13.5px">Add books from a photo of a cover, or a screenshot of your Kindle or Audible library or a Goodreads shelf. Up to 6 images at a time.</p>
+        <div class="ebtns"><label class="btn solid" id="scan-pick"><input type="file" id="scan-input" class="sr-only" accept="image/*" multiple><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Choose photos or screenshots</label><button class="btn" type="button" id="gr-missing" hidden></button></div>
+        <p class="scan-msg" id="scan-msg" role="status"></p>
+        <div class="scan-review" id="scan-review" hidden></div>
+        <div class="divider">Or type one in</div>
+      </div>
       <form class="addform" id="addform">
         <label>Title<input type="text" id="a-title" required></label>
         <label>Author<input type="text" id="a-author"></label>
@@ -115,7 +123,7 @@
         <label>Genre<select id="a-genre"><option value="fantasy">Fantasy</option><option value="romantasy">Romantasy</option><option value="scifi">Sci-fi</option><option value="litrpg">LitRPG</option><option value="fiction">Other fiction</option><option value="nonfiction">Non-fiction</option></select></label>
         <div style="display:flex;align-items:end"><button class="btn solid" type="submit">Add to shelf</button></div>
       </form>
-      <p class="src" style="padding:0 16px 14px;margin:0">New books start without a Goodreads rating. Ask Claude to "update the Library" and it will fill them in.</p>
+      <p class="src" style="padding:0 16px 14px;margin:0">Books you type in start without a Goodreads rating. Use “Look up missing Goodreads ratings” above to fill them in.</p>
     </details>
 
     <footer class="foot">
@@ -133,11 +141,12 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="./app1.js?v=3"></script>
-<script src="./app2.js?v=3"></script>
-<script src="./app3.js?v=3"></script>
-<script src="./app4.js?v=3"></script>
-<script src="./app5.js?v=3"></script>
-<script src="./app6.js?v=3"></script>
+<script src="./app1.js?v=4"></script>
+<script src="./app2.js?v=4"></script>
+<script src="./app3.js?v=4"></script>
+<script src="./app4.js?v=4"></script>
+<script src="./app5.js?v=4"></script>
+<script src="./app6.js?v=4"></script>
+<script src="./app7.js?v=4"></script>
 </body>
 </html>
