@@ -84,7 +84,8 @@ function showJoin() {
   $('authview').hidden = true; $('appview').hidden = true;
   let v = $('joinview');
   if (!v) { v = document.createElement('div'); v.id = 'joinview'; v.className = 'authwrap'; document.body.insertBefore(v, $('appview')); }
-  const code = pendingInvite();
+  // the code typed at sign-up travels with the account, so it survives confirming the email on another device
+  const code = pendingInvite() || (user && user.user_metadata && user.user_metadata.invite) || '';
   v.innerHTML = `<header class="band authband"><div class="band-in"><div class="topbar"><div class="eyebrow">Invite only</div></div><h1>Join The Library</h1><div class="spines" aria-hidden="true">${$('auth-spines') ? $('auth-spines').innerHTML : ''}</div></div></header>
     <div class="auth"><form id="joinform" novalidate>
       <p class="ehint" style="font-size:14px">The Library is a small reading community. ${code ? 'Pick how other members will see you.' : 'You need an invite from a member. Paste the code from your invite link.'}</p>

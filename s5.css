@@ -123,3 +123,5 @@
 .authhead h2{font-size:26px;line-height:1.15}
 .authhead p{margin:0;font-size:14px;color:var(--muted)}
 #au-hint{margin-top:-6px}
+#au-code-wrap input{text-transform:uppercase;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+#au-code-hint{margin-top:-6px}

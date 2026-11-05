@@ -48,7 +48,8 @@ $('authform').addEventListener('submit', async e => {
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) authMsg(/confirm/i.test(error.message) ? 'Confirm your email first: open the link we sent you, then log in here.' : 'Login failed: ' + error.message, true);
     } else {
-      const { data, error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: new URL('./', location.href).href } });
+      const invite = ($('au-code') && $('au-code').value.trim().toUpperCase()) || (typeof pendingInvite === 'function' ? pendingInvite() : '');
+      const { data, error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: new URL('./', location.href).href, data: invite ? { invite } : {} } });
       if (error) authMsg('Could not create the account: ' + error.message, true);
       else if (!data.session) authMsg('Account created. Open the confirmation link we emailed you, then come back and log in.');
     }
